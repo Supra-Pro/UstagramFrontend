@@ -1,39 +1,50 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Favourite } from '../interfaces/favourite';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthServiceService } from './auth-service.service';
+import { Favourite } from '../interfaces/favourite';
 
 @Injectable({
   providedIn: 'root'
 })
-export class FavouriteServiceService {
+export class FavoritesService {
+  private apiUrl = 'http://localhost:5266/api/Favourites';
 
-  constructor(private http: HttpClient, private authService: AuthServiceService) { }
+  constructor(
+    private http: HttpClient,
+    private authService: AuthServiceService
+  ) {}
 
-  private apiUrl = 'http://localhost:5266/api/Favourites/'
-
-  private getHeaders() {
-    return {
-      headers: new HttpHeaders({
-        'Authorization': `Bearer ${this.authService.getToken()}`
-      })
-    };
+  getFavoritesByUser() {
+    return this.http.get<Favourite[]>(`${this.apiUrl}/GetFavourites`, { 
+      headers: this.getAuthHeaders()
+    });
   }
 
-  addFavourite(f: Favourite): Observable<string>{
-    return this.http.post<string>(this.apiUrl + `CreateFavourite`, f);
+  createFavorite(postId: string) {
+    return this.http.post(`${this.apiUrl}/CreateFavourite`, 
+      { PostId: postId },
+      {
+        headers: this.getAuthHeaders()
+      }
+    );
   }
 
-  deleteFavourite(id: string): Observable<string>{
-    return this.http.delete<string>(this.apiUrl + `DeleteFavourite/${id}`)
+  deleteFavorite(favoriteId: string) {
+    return this.http.delete(`${this.apiUrl}/DeleteFavourite/${favoriteId}`, {
+      headers: this.getAuthHeaders()
+    });
   }
 
-  getAllFavourites(): Observable<Favourite[]>{
-    return this.http.get<Favourite[]>(this.apiUrl + `GetFavourites`);
+  isPostFavorited(postId: string) {
+    return this.http.get<boolean>(`${this.apiUrl}/check/${postId}`, {
+      headers: this.getAuthHeaders()
+    });
   }
 
-  getMyFavourites(): Observable<Favourite[]>{
-    return this.http.get<Favourite[]>(this.apiUrl + `GetMyFavourites/my`)
+  private getAuthHeaders() {
+    return new HttpHeaders({
+      'Authorization': `Bearer ${this.authService.getToken()}`,
+      'Content-Type': 'application/json'
+    });
   }
 }

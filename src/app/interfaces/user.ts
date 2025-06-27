@@ -8,6 +8,7 @@ export interface User {
   phone: string;
   location: string;
   photoPath: string;
+  photoUrl?: string;
   dob: string;
   status: string;
   masterType: string;
@@ -15,8 +16,8 @@ export interface User {
   experience: number;
   telegramUrl: string;
   instagramUrl: string;
-  posts: Post[];
-  favourites: Favourite[];
+  posts?: Post[];
+  favourites?: Favourite[];
 }
 
 export interface UserDTO {
@@ -24,15 +25,24 @@ export interface UserDTO {
   username: string;
   password: string;
   phone: string;
-  location?: string;
+  location: string;
   photoPath?: string;
-  dob?: string;
-  status?: string;
+  photo?: File | null;
+  dob: string;
+  status: string;
   masterType?: string;
   bio?: string;
-  experience: number;
+  experience?: number;
   telegramUrl?: string;
   instagramUrl?: string;
+}
+
+export interface UserSummaryDTO {
+  id: string;
+  fullName: string;
+  username: string;
+  photoPath?: string;
+  photoUrl?: string;
 }
 
 export interface LoginRequest {

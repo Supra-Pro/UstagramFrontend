@@ -17,6 +17,10 @@
       </div>
     </div>
 
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
     <!-- Step 1: Basic Information -->
     <form *ngIf="currentStep === 1" (ngSubmit)="nextStep()" #step1Form="ngForm">
       <h2>Asosiy ma'lumotlar</h2>
@@ -138,12 +142,13 @@
         <button type="button" class="secondary-btn" (click)="prevStep()">
           <i class="icon-arrow-left"></i> Orqaga
         </button>
-        <button type="submit" [disabled]="step2Form.invalid" class="primary-btn">
+        <button type="submit" [disabled]="step2Form.invalid" class="primary-btn" aria-label="Confirm">
           Keyingi qadam <i class="icon-arrow-right"></i>
         </button>
       </div>
     </form>
 
+    <!-- Step 3: Specialization Details -->
     <form *ngIf="currentStep === 3" (ngSubmit)="onSubmit()" #step3Form="ngForm">
       <h2>Mutaxassislik ma'lumotlari</h2>
       
@@ -163,8 +168,8 @@
                [class.selected]="userData.status === 'EXPERT'"
                (click)="userData.status = 'EXPERT'">
             <i class="icon-graduation-cap"></i>
-            <h3>Duradgor</h3>
-            <p>Duradgorlik ishlari bilan shug'ullanaman</p>
+            <h3>Mutaxassis</h3>
+            <p>Agro sohada mutaxassislik qilaman</p>
           </div>
         </div>
       </div>
@@ -173,11 +178,14 @@
         <label for="masterType">
           <i class="icon-star"></i> Mutaxassislik turi
         </label>
-        <select id="masterType" name="masterType" [(ngModel)]="userData.masterType">
-          <option value="" disabled selected>Mutaxassisligingizni tanlang</option>
-          <option value="AGROLOGIST">Duradgor</option>
-          <option value="IRRIGATION">Quruvchi</option>
-          <option value="CROP">Ekinlar mutaxassisi</option>
+        <select id="masterType" 
+                name="masterType" 
+                [(ngModel)]="userData.masterType" 
+                [required]="userData.status === 'EXPERT'">
+          <option value="" disabled selected>Mutaxassislik turini tanlang</option>
+          <option value="AGROLOGIST">Agronom</option>
+          <option value="IRRIGATION">Sug'orish mutaxassisi</option>
+          <option value="CROP">Ekin himoyasi bo'yicha mutaxassis</option>
           <option value="ANIMAL">Chorvachilik mutaxassisi</option>
         </select>
       </div>
@@ -186,12 +194,12 @@
         <label for="experience">
           <i class="icon-award"></i> Tajriba (yil)
         </label>
-        <input 
-          type="number" 
-          id="experience"
-          name="experience" 
-          [(ngModel)]="userData.experience" 
-          placeholder="5">
+        <input type="number" 
+               id="experience" 
+               name="experience" 
+               [(ngModel)]="userData.experience" 
+               placeholder="0" 
+               min="0">
       </div>
 
       <div class="input-group">
@@ -200,32 +208,39 @@
         </label>
         <div class="social-input">
           <i class="icon-telegram"></i>
-          <input 
-            type="url" 
-            name="telegramUrl" 
-            [(ngModel)]="userData.telegramUrl" 
-            placeholder="Telegram profil havolasi">
+          <input type="url" 
+                 name="telegramUrl" 
+                 [(ngModel)]="userData.telegramUrl" 
+                 placeholder="Telegram profil havolasi">
         </div>
         <div class="social-input">
           <i class="icon-instagram"></i>
-          <input 
-            type="url" 
-            name="instagramUrl" 
-            [(ngModel)]="userData.instagramUrl" 
-            placeholder="Instagram profil havolasi">
+          <input type="url" 
+                 name="instagramUrl" 
+                 [(ngModel)]="userData.instagramUrl" 
+                 placeholder="Instagram profil havolasi">
         </div>
       </div>
 
       <div class="terms-agreement">
-        <input type="checkbox" id="terms" name="terms" [(ngModel)]="termsAccepted" required>
-        <label for="terms">Ustagram <a href="/terms">foydalanish shartlari</a> va <a href="/privacy">maxfiylik siyosati</a> bilan tanishdim va roziman</label>
+        <input type="checkbox" 
+               id="terms" 
+               name="terms" 
+               [(ngModel)]="termsAccepted" 
+               required>
+        <label for="terms">
+          Ustagram <a href="/terms">foydalanish shartlari</a> va 
+          <a href="/privacy">maxfiylik siyosati</a> bilan tanishdim va roziman
+        </label>
       </div>
 
       <div class="button-group">
         <button type="button" class="secondary-btn" (click)="prevStep()">
           <i class="icon-arrow-left"></i> Orqaga
         </button>
-        <button type="submit" [disabled]="step3Form.invalid || !termsAccepted" class="primary-btn">
+        <button type="submit" 
+                [disabled]="step3Form.invalid || !termsAccepted" 
+                class="primary-btn">
           <i class="icon-check"></i> Ro'yxatdan o'tish
         </button>
       </div>

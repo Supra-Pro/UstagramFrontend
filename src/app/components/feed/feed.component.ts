@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { PostServiceService } from '../../services/post-service.service';
 import { UserServiceService } from '../../services/user-service.service';
 import { AuthServiceService } from '../../services/auth-service.service';
-import { FavouriteServiceService } from '../../services/favourite-service.service';
+import { FavoritesService } from '../../services/favourite-service.service';
 import { Post } from '../../interfaces/post';
 import { User } from '../../interfaces/user';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -33,7 +33,7 @@ export class FeedComponent implements OnInit, OnDestroy {
     private postService: PostServiceService,
     private userService: UserServiceService,
     private authService: AuthServiceService,
-    private favouriteService: FavouriteServiceService,
+    private favouriteService: FavoritesService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
@@ -160,23 +160,23 @@ export class FeedComponent implements OnInit, OnDestroy {
     this.postService.editPost(post).subscribe();
   }
 
-  toggleFavourite(post: Post): void {
-    if (!this.currentUser) return;
+  // toggleFavourite(post: Post): void {
+  //   if (!this.currentUser) return;
 
-    const isFavourited = (post as any).isFavourited;
-    if (isFavourited) {
-      this.favouriteService.deleteFavourite(post.id).pipe(takeUntil(this.destroy$)).subscribe({
-        next: () => (post as any).isFavourited = false,
-        error: (err) => console.error('Error removing favourite:', err)
-      });
-    } else {
-      const favouriteDto = { postId: post.id } as any;
-      this.favouriteService.addFavourite(favouriteDto).pipe(takeUntil(this.destroy$)).subscribe({
-        next: () => (post as any).isFavourited = true,
-        error: (err) => console.error('Error adding favourite:', err)
-      });
-    }
-  }
+  //   const isFavourited = (post as any).isFavourited;
+  //   if (isFavourited) {
+  //     this.favouriteService.deleteFavourite(post.id).pipe(takeUntil(this.destroy$)).subscribe({
+  //       next: () => (post as any).isFavourited = false,
+  //       error: (err) => console.error('Error removing favourite:', err)
+  //     });
+  //   } else {
+  //     const favouriteDto = { postId: post.id } as any;
+  //     this.favouriteService.addFavourite(favouriteDto).pipe(takeUntil(this.destroy$)).subscribe({
+  //       next: () => (post as any).isFavourited = true,
+  //       error: (err) => console.error('Error adding favourite:', err)
+  //     });
+  //   }
+  // }
 
   navigateToUserProfile(username: string): void {
     this.router.navigate(['/user', username]);

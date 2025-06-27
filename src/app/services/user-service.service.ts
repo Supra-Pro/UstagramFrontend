@@ -17,7 +17,7 @@ export class UserServiceService {
   }
 
   updateUser(userId: string, user: FormData): Observable<string> {
-    return this.http.put<string>(`${this.apiUrl}UpdateUser?userId=${userId}`, user, {
+    return this.http.put<string>(`${this.apiUrl}UpdateUser/${userId}`, user, {
       headers: new HttpHeaders({
         'Authorization': `Bearer ${this.authService.getToken()}`
       })
@@ -37,7 +37,7 @@ export class UserServiceService {
   }
 
   getUserById(userId: string): Observable<User> {
-    return this.http.get<User>(`${this.apiUrl}GetUserById?userId=${userId}`);
+    return this.http.get<User>(`${this.apiUrl}GetUserById/${userId}`);
   }
 
   searchUsers(term: string): Observable<User[]> {

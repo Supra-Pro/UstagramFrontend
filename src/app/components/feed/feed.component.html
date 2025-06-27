@@ -6,7 +6,7 @@
         <a routerLink="/feed" class="nav-icon" title="Feed"><i class="fas fa-home"></i></a>
         <a routerLink="/explore" class="nav-icon" title="Explore"><i class="fas fa-search"></i></a>
         <a routerLink="/contribute" class="nav-icon" title="Create"><i class="fas fa-plus-square"></i></a>
-        <a routerLink="/messages" class="nav-icon" title="Messages"><i class="fas fa-comment-dots"></i></a>
+        <a routerLink="/favorites" class="nav-icon" title="Saqlanganlar"><i class="far fa-bookmark"></i></a>
         <a routerLink="/profile" class="nav-icon" title="Profile"><i class="fas fa-user-circle"></i></a>
       </nav>
     </div>
@@ -55,9 +55,9 @@
       <div class="posts-feed">
         <div *ngFor="let post of posts" class="post-card">
           <div class="post-header">
-            <div class="post-user" (click)="navigateToUserProfile(post.user?.username || '')">
-              <img [src]="post.user?.photoPath || 'assets/default-profile.jpg'" class="post-avatar">
-              <span class="post-username">{{ post.user?.username || 'unknown' }}</span>
+            <div class="post-user" (click)="navigateToUserProfile(post.user.username || '')">
+              <img [src]="post.user.photoPath || 'assets/default-profile.jpg'" class="post-avatar">
+              <span class="post-username">{{ post.user.username || 'unknown' }}</span>
             </div>
             <button class="post-more">⋮</button>
           </div>
@@ -73,9 +73,9 @@
             <button (click)="openPostModal(post)" title="Comment">
               <i class="far fa-comment"></i>
             </button>
-            <button (click)="toggleFavourite(post)" [class.favourited]="post.isFavourited" title="Save">
+            <!-- <button (click)="toggleFavourite(post)" [class.favourited]="post.isFavourited" title="Save">
               <i [class]="post.isFavourited ? 'fas fa-bookmark' : 'far fa-bookmark'"></i>
-            </button>
+            </button> -->
           </div>
 
           <div class="post-likes">
@@ -83,7 +83,7 @@
           </div>
 
           <div class="post-caption">
-            <strong (click)="navigateToUserProfile(post.user?.username || '')">{{ post.user?.username || 'unknown' }}</strong> {{ post.description }}
+            <strong (click)="navigateToUserProfile(post.user.username || '')">{{ post.user.username || 'unknown' }}</strong> {{ post.description }}
           </div>
 
           <div class="post-comments-preview" *ngIf="post.comments?.length">
@@ -111,7 +111,7 @@
     <a routerLink="/feed" class="nav-icon" title="Feed"><i class="fas fa-home"></i></a>
     <a routerLink="/explore" class="nav-icon" title="Explore"><i class="fas fa-search"></i></a>
     <a routerLink="/contribute" class="nav-icon" title="Create"><i class="fas fa-plus-square"></i></a>
-    <a routerLink="/messages" class="nav-icon" title="Messages"><i class="fas fa-comment-dots"></i></a>
+    <a routerLink="/favorites" class="nav-icon" title="Saqlanganlar"><i class="far fa-bookmark"></i></a>
     <a routerLink="/profile" class="nav-icon" title="Profile"><i class="fas fa-user-circle"></i></a>
   </nav>
 

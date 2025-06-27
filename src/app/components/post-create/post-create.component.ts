@@ -109,45 +109,63 @@ export class PostCreateComponent implements OnInit {
 
 
   onSubmit(): void {
-    console.log('Submitting post:', this.post);
     if (this.isSubmitting) return;
     this.isSubmitting = true;
-    const postData: PostDTO = { ...this.post };
-    if (this.editingPostId) {
-      this.updatePost(postData);
+
+    const formData = new FormData();
+    formData.append('PostType', this.post.postType);
+    formData.append('Text', this.post.text);
+    formData.append('Description', this.post.description || '');
+    formData.append('Price', this.post.price.toString());
+    
+    if (this.post.attachment) {
+      formData.append('Attachment', this.post.attachment);
+      formData.append('PhotoPath', ''); 
     } else {
-      this.createPost(postData);
+      const photoPath = this.post.photoPath || 
+                      `https://picsum.photos/200/200?random=${Math.floor(Math.random() * 1000)}`;
+      formData.append('PhotoPath', photoPath);
+    }
+
+    if (this.editingPostId) {
+      this.postService.updatePost(this.editingPostId, formData).subscribe({
+        next: () => {
+          this.showSuccess('Post updated successfully!');
+          setTimeout(() => this.router.navigate(['/feed']), 1500);
+        },
+        error: (err) => {
+          this.handleError(err, 'Failed to update post');
+        }
+      });
+    } else {
+      this.postService.createPost(formData).subscribe({
+        next: () => {
+          this.showSuccess('Post created successfully!');
+          setTimeout(() => this.router.navigate(['/feed']), 1500);
+        },
+        error: (err) => {
+          this.handleError(err, 'Failed to create post');
+        }
+      });
     }
   }
 
-  createPost(postData: PostDTO): void {
-  if (!postData.attachment && !postData.photoPath) {
-    postData.photoPath = `https://picsum.photos/200/200?random=${Math.floor(Math.random() * 1000)}`;
-  }
-  this.postService.createPost(postData).subscribe({
-    next: () => {
-      this.showSuccess('Post muvaffaqiyatli yaratildi!');
-      setTimeout(() => {
-        this.router.navigate(['/feed']);
-      }, 1500);
-    },
-    error: (err) => {
-      console.error('Error creating post:', err);
-      let errorMsg = 'Post yaratishda xatolik yuz berdi.';
-      if (err.error?.title) {
-        errorMsg = err.error.title;
-        if (err.error.errors) {
-          const errorDetails = Object.values(err.error.errors)
-            .flat()
-            .join(' ');
-          errorMsg += `: ${errorDetails}`;
-        }
+  private handleError(err: any, defaultMsg: string): void {
+    console.error('Error:', err);
+    let errorMsg = defaultMsg;
+    
+    if (err.error?.title) {
+      errorMsg = err.error.title;
+      if (err.error.errors) {
+        errorMsg += ': ' + Object.values(err.error.errors).flat().join(' ');
       }
-      this.showError(errorMsg);
-      this.isSubmitting = false;
+    } else if (err.error?.message) {
+      errorMsg = err.error.message;
     }
-  });
-}
+    
+    this.showError(errorMsg);
+    this.isSubmitting = false;
+  }
 
 onFileSelected(event: Event): void {
   const input = event.target as HTMLInputElement;
@@ -173,28 +191,6 @@ onFileSelected(event: Event): void {
     this.previewImage = null;
     this.post.attachment = null;
     this.post.photoPath = `https://picsum.photos/200/200?random=${Math.floor(Math.random() * 1000)}`; 
-  }
-
-  updatePost(postData: PostDTO): void {
-    if (!this.editingPostId) return;
-    
-    this.postService.updatePost(this.editingPostId, postData).subscribe({
-      next: () => {
-        this.showSuccess('Post muvaffaqiyatli yangilandi!');
-        setTimeout(() => {
-          this.router.navigate(['/feed']);
-        }, 1500);
-      },
-      error: (err) => {
-        console.error('Error updating post:', err);
-        const errorMsg = err.error?.title || err.error?.message || 'Post yangilashda xatolik yuz berdi.';
-        this.showError(errorMsg);
-        this.isSubmitting = false;
-        setTimeout(() => {
-          this.router.navigate(['/feed']);
-        }, 1500);
-      }
-    });
   }
 
   cancel(): void {

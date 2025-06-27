@@ -10,6 +10,7 @@ import { ExploreComponent } from './components/explore/explore.component';
 import { UserComponent } from './components/user/user.component';
 import { PostCreateComponent } from './components/post-create/post-create.component';
 import { EditProfileComponent } from './components/profile/edit-profile/edit-profile.component';
+import { FavoritesComponent } from './components/favorites/favorites.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -20,6 +21,7 @@ const routes: Routes = [
   { path: 'explore', component: ExploreComponent, canActivate: [authGuard] },
   { path: 'contribute', component: PostCreateComponent, canActivate: [authGuard] },
   { path: 'user/:username', component: UserComponent, canActivate: [authGuard] },
+  { path: 'favorites', component: FavoritesComponent, canActivate: [authGuard] },
   { path: '', redirectTo: '/feed', pathMatch: 'full' },
   { path: '**', redirectTo: '/feed' }
 ];

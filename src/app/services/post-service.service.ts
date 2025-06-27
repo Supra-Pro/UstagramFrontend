@@ -13,27 +13,27 @@ export class PostServiceService {
 
   constructor(private http: HttpClient, private authService: AuthServiceService) { }
 
-  createPost(post: PostDTO): Observable<string> {
-  const formData = new FormData();
-  formData.append('PostType', post.postType || '');
-  formData.append('Text', post.text || '');
-  formData.append('Description', post.description || '');
-  formData.append('Price', post.price?.toString() || '0');
-  if (post.attachment) {
-    formData.append('Attachment', post.attachment);
+  createPost(formData: FormData): Observable<string> {
+    console.log('FormData contents:'); 
+    formData.forEach((value, key) => {
+      console.log(key, value);
+    });
+
+    return this.http.post<string>(`${this.apiUrl}CreatePost`, formData, {
+      headers: new HttpHeaders({
+        'Authorization': `Bearer ${this.authService.getToken()}`,
+        'enctype': 'multipart/form-data' 
+      })
+    });
   }
-  
-  formData.append('PhotoPath', post.photoPath || `https://picsum.photos/200/200?random=${Math.floor(Math.random() * 1000)}`);
 
-  console.log('FormData entries for CreatePost:');
-  formData.forEach((value, key) => console.log(`${key}: ${value instanceof File ? value.name : value}`));
-
-  return this.http.post<string>(`${this.apiUrl}CreatePost`, formData, {
-    headers: new HttpHeaders({
-      'Authorization': `Bearer ${this.authService.getToken()}`
-    })
-  });
-}
+  updatePost(id: string, formData: FormData): Observable<string> {
+    return this.http.put<string>(`${this.apiUrl}UpdatePost/${id}`, formData, {
+      headers: new HttpHeaders({
+        'Authorization': `Bearer ${this.authService.getToken()}`
+      })
+    });
+  }
 
   getPostById(id: string): Observable<Post> {
     return this.http.get<Post>(`${this.apiUrl}GetPostById/${id}`);
@@ -47,18 +47,6 @@ export class PostServiceService {
 
   editPost(p: Post): Observable<string> {
     return this.http.put<string>(`${this.apiUrl}UpdatePost/${p.id}`, p);
-  }
-
-  updatePost(id: string, post: PostDTO): Observable<string> {
-    const formData = new FormData();
-    formData.append('postType', post.postType);
-    formData.append('text', post.text);
-    formData.append('description', post.description);
-    formData.append('price', post.price.toString());
-    if (post.attachment) {
-      formData.append('attachment', post.attachment);
-    }
-    return this.http.put<string>(`${this.apiUrl}UpdatePost/${id}`, formData);
   }
 
   deletePost(id: string): Observable<string> {

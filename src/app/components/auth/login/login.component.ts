@@ -1,14 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { AuthServiceService } from '../../../services/auth-service.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   loginForm: FormGroup;
   errorMessage: string | null = null;
   isLoading = false;
@@ -20,34 +20,29 @@ export class LoginComponent implements OnInit {
     private router: Router
   ) {
     this.loginForm = this.fb.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required]
+      username: ['', [Validators.required]],
+      password: ['', [Validators.required]]
     });
   }
 
-  ngOnInit(): void {}
-
-  onSubmit() {
-    if (this.loginForm.invalid) {
-      this.errorMessage = 'Iltimos, foydalanuvchi nomi va parolni kiriting.';
-      return;
-    }
+  onSubmit(): void {
+    if (this.loginForm.invalid || this.isLoading) return;
 
     this.isLoading = true;
     this.errorMessage = null;
 
     const { username, password } = this.loginForm.value;
-    this.authService.login(username.trim(), password.trim()).subscribe({
-      next: (response) => {
-        this.isLoading = false;
-        if (response.token) {
-          this.router.navigate(['/feed']);
-        }
+
+    this.authService.login(username, password).subscribe({
+      next: () => {
+        this.router.navigate(['/feed']);
       },
       error: (err) => {
+        this.errorMessage = err.message || 'Login failed';
         this.isLoading = false;
-        this.errorMessage = err.error?.message || err.error?.error || 'Login failed. Please try again.';
-        console.error('Login error:', err);
+      },
+      complete: () => {
+        this.isLoading = false;
       }
     });
   }

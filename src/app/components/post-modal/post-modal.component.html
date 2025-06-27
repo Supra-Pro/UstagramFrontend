@@ -43,7 +43,7 @@
       </div>
 
       <div class="mobile-comments-toggle" *ngIf="isMobile">
-        <button (click)="toggleCommentsModal()">View Comments ({{ post.comments?.length || 0 }})</button>
+        <button (click)="toggleCommentsModal()">View Comments ({{ post.comments.length || 0 }})</button>
       </div>
     </div>
 

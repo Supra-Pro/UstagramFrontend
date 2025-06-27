@@ -9,7 +9,7 @@ export interface Post {
   description: string;
   price: number;
   photoPath: string;
-  photoUrl: string;
+  photoUrl?: string;
   date: string;
   likes: number;
   dislikes: number;
@@ -24,5 +24,5 @@ export interface PostDTO {
   description: string;
   price: number;
   attachment?: File | null;
-  photoPath?: string; 
+  photoPath?: string;
 }

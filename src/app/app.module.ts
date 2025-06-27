@@ -22,6 +22,7 @@ import { PostModalComponent } from './components/post-modal/post-modal.component
 import { EditProfileComponent } from './components/profile/edit-profile/edit-profile.component';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { FavoritesComponent } from './components/favorites/favorites.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
     UserComponent,
     PostCreateComponent,
     PostModalComponent,
-    EditProfileComponent
+    EditProfileComponent,
+    FavoritesComponent
   ],
   imports: [
     BrowserModule,

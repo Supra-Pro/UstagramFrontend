@@ -79,7 +79,7 @@
               <div class="error-message" *ngIf="text.invalid && text.touched">
                 <i class="fas fa-exclamation-circle"></i> Title is required
               </div>
-              <div class="char-counter">{{ post.text?.length || 0 }}/100</div>
+              <div class="char-counter">{{ post.text.length || 0 }}/100</div>
             </div>
           </div>
 
@@ -94,7 +94,7 @@
               <div class="error-message" *ngIf="description.invalid && description.touched">
                 <i class="fas fa-exclamation-circle"></i> Description is required
               </div>
-              <div class="char-counter">{{ post.description?.length || 0 }}/500</div>
+              <div class="char-counter">{{ post.description.length || 0 }}/500</div>
             </div>
           </div>
 
