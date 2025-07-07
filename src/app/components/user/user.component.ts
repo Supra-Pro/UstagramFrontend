@@ -15,12 +15,30 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class UserComponent implements OnInit {
   username: string = '';
   user: User | null = null;
-  posts: Post[] = [];
-  selectedpost: Post | null = null;
+  posts: (Post & { randomPhoto?: string })[] = [];
+  selectedPost: Post | null = null;
   isLoading = true;
   errorMessage = '';
   showDeleteSection = false;
   isCurrentUser = false;
+  
+  private photoList: string[] = [
+    'p1.jpeg',
+    'p2.jpeg',
+    'p3.jpeg',
+    'p4.jpeg',
+    'p5.jpeg',
+    'p6.jpeg',
+    'p7.jpeg',
+    'p8.jpeg',
+    'p9.jpeg',
+    'p10.jpeg',
+    'p11.jpeg',
+    'p12.jpeg',
+    'p13.jpeg',
+    'p14.jpeg',
+    'p15.jpeg',
+  ];
 
   constructor(
     private userService: UserServiceService,
@@ -42,6 +60,11 @@ export class UserComponent implements OnInit {
     });
   }
 
+  private getRandomPhoto(): string {
+    const randomIndex = Math.floor(Math.random() * this.photoList.length);
+    return this.photoList[randomIndex];
+  }
+
   async loadUserData() {
     try {
       this.isLoading = true;
@@ -52,7 +75,10 @@ export class UserComponent implements OnInit {
 
       const posts = await this.postService.getPostsByUserId(user.id).toPromise();
       this.user = user;
-      this.posts = posts || [];
+      this.posts = (posts || []).map(post => ({
+        ...post,
+        randomPhoto: this.getRandomPhoto()
+      }));
       this.isCurrentUser = user.id === this.authService.getCurrentUserId();
     } catch (error: any) {
       console.error('Error loading profile:', error);
@@ -71,7 +97,8 @@ export class UserComponent implements OnInit {
     const birthDate = new Date(dob);
     const today = new Date();
     let age = today.getFullYear() - birthDate.getFullYear();
-    if (today.getMonth() < birthDate.getMonth() || (today.getMonth() === birthDate.getMonth() && today.getDate() < birthDate.getDate())) {
+    if (today.getMonth() < birthDate.getMonth() || 
+        (today.getMonth() === birthDate.getMonth() && today.getDate() < birthDate.getDate())) {
       age--;
     }
     return age;
@@ -107,12 +134,12 @@ export class UserComponent implements OnInit {
         url: window.location.href
       }).catch(err => console.error('Error sharing:', err));
     } else {
-      alert('Share feature not supported');
+      alert('Share feature not supported in your browser');
     }
   }
 
   openPostModal(post: Post): void {
-    this.selectedpost = {
+    this.selectedPost = {
       ...post,
       comments: post.comments ? [...post.comments] : []
     };
@@ -120,7 +147,7 @@ export class UserComponent implements OnInit {
   }
 
   closeModal(): void {
-    this.selectedpost = null;
+    this.selectedPost = null;
     document.body.style.overflow = 'auto';
   }
 }

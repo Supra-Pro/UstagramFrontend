@@ -35,7 +35,7 @@
       </div>
       <div class="user-posts-grid">
         <div *ngFor="let post of posts" class="post-thumbnail" (click)="openPostModal(post)">
-          <img [src]="post.photoUrl || 'assets/default-post.jpg'" alt="Post">
+          <img [src]="post.randomPhoto" alt="Post">
         </div>
       </div>
     </div>
@@ -43,11 +43,11 @@
     <div class="feed-view" *ngIf="!showUserProfile">
       <div class="stories-container">
         <div class="stories">
-          <div *ngFor="let user of [1,2,3,4,5,6,7,8,9,10]" class="story">
+          <div *ngFor="let photo of storyPhotos; let i = index" class="story">
             <div class="story-avatar">
-              <img [src]="'https://picsum.photos/200/200?random=' + user" alt="User">
+              <img [src]="photo" loading="lazy" alt="User">
             </div>
-            <span class="story-username">user{{user}}</span>
+            <span class="story-username">user{{i+1}}</span>
           </div>
         </div>
       </div>
@@ -63,7 +63,7 @@
           </div>
 
           <div class="post-image" (click)="openPostModal(post)">
-            <img [src]="post.photoUrl || 'assets/default-post.jpg'" alt="Post">
+            <img [src]="post.randomPhoto" alt="Post">
           </div>
 
           <div class="post-actions">
@@ -73,9 +73,6 @@
             <button (click)="openPostModal(post)" title="Comment">
               <i class="far fa-comment"></i>
             </button>
-            <!-- <button (click)="toggleFavourite(post)" [class.favourited]="post.isFavourited" title="Save">
-              <i [class]="post.isFavourited ? 'fas fa-bookmark' : 'far fa-bookmark'"></i>
-            </button> -->
           </div>
 
           <div class="post-likes">
@@ -83,7 +80,7 @@
           </div>
 
           <div class="post-caption">
-            <strong (click)="navigateToUserProfile(post.user.username || '')">{{ post.user.username || 'unknown' }}</strong> {{ post.description }}
+            <strong (click)="navigateToUserProfile(post.user.username || '')">{{ post.user.username || 'unknown' }}</strong> {{ post.text }}
           </div>
 
           <div class="post-comments-preview" *ngIf="post.comments?.length">

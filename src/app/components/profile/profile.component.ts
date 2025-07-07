@@ -14,11 +14,29 @@ import { Router } from '@angular/router';
 })
 export class ProfileComponent implements OnInit {
   user: User | null = null;
-  posts: Post[] = [];
+  posts: (Post & { randomPhoto?: string })[] = [];
   selectedPost: Post | null = null;
   isLoading = true;
   showDeleteSection = false;
   errorMessage = '';
+  
+  private photoList: string[] = [
+    'p1.jpeg',
+    'p2.jpeg',
+    'p3.jpeg',
+    'p4.jpeg',
+    'p5.jpeg',
+    'p6.jpeg',
+    'p7.jpeg',
+    'p8.jpeg',
+    'p9.jpeg',
+    'p10.jpeg',
+    'p11.jpeg',
+    'p12.jpeg',
+    'p13.jpeg',
+    'p14.jpeg',
+    'p15.jpeg',
+  ];
 
   constructor(
     private userService: UserServiceService,
@@ -29,6 +47,11 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadUserData();
+  }
+
+  private getRandomPhoto(): string {
+    const randomIndex = Math.floor(Math.random() * this.photoList.length);
+    return this.photoList[randomIndex];
   }
 
   async loadUserData() {
@@ -47,7 +70,10 @@ export class ProfileComponent implements OnInit {
 
       const posts = await this.postService.getMyPost().toPromise();
       this.user = user;
-      this.posts = posts || [];
+      this.posts = (posts || []).map(post => ({
+        ...post,
+        randomPhoto: this.getRandomPhoto()
+      }));
     } catch (error: any) {
       console.error('Error loading profile:', error);
       this.errorMessage = 'Failed to load profile data';

@@ -4,23 +4,23 @@
 
     <div class="post-modal-container" [class.mobile]="isMobile">
       <div class="post-image-section">
-        <img [src]="post.photoUrl || 'assets/default-post.jpg'" alt="Post image" class="post-image">
+        <img [src]="randomPhoto" alt="Post image" class="post-image">
       </div>
 
       <div class="post-details-section" *ngIf="!isMobile">
         <div class="post-header">
-          <img [src]="user?.photoPath || 'assets/default-profile.png'" class="user-pic">
-          <span class="username">{{ user?.username || 'unknown' }}</span>
+          <img [src]="post.user.photoPath" class="user-pic">
+          <span class="username">{{ post.user.username || 'unknown' }}</span>
         </div>
 
         <div class="post-caption">
-          <p><strong>{{ user?.fullName }}</strong> {{ post.description }}</p>
+          <p><strong>{{ post.user.fullName }}</strong> {{ post.text }}</p>
           <p class="post-date">{{ post.date | date:'MMM d, yyyy' }}</p>
         </div>
 
         <div class="post-comments">
           <div class="comment" *ngFor="let comment of post.comments || []">
-            <img [src]="comment.user?.photoPath || 'assets/default-profile.png'" class="comment-user-pic">
+            <img [src]="comment.user?.photoPath || 'default-profile.png'" class="comment-user-pic">
             <div class="comment-content">
               <strong>{{ comment.user?.username || 'unknown' }}</strong> {{ comment.content }}
             </div>
@@ -59,7 +59,7 @@
         </div>
         <div class="post-comments">
           <div class="comment" *ngFor="let comment of post.comments || []">
-            <img [src]="comment.user?.photoPath || 'assets/default-profile.png'" class="comment-user-pic">
+            <img [src]="comment.user?.photoPath || 'default-profile.png'" class="comment-user-pic">
             <div class="comment-content">
               <strong>{{ comment.user?.username || 'unknown' }}</strong> {{ comment.content }}
             </div>

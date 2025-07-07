@@ -15,7 +15,7 @@ import { Comment } from '../../interfaces/comment';
   styleUrls: ['./feed.component.scss']
 })
 export class FeedComponent implements OnInit, OnDestroy {
-  posts: (Post & { isLiked?: boolean; isFavourited?: boolean })[] = [];
+  posts: (Post & { isLiked?: boolean; isFavourited?: boolean; randomPhoto?: string })[] = [];
   currentUser: User | null = null;
   viewedUser: User | null = null;
   isLoading = true;
@@ -23,11 +23,31 @@ export class FeedComponent implements OnInit, OnDestroy {
   selectedPost: Post | null = null; 
   isMobileView = false;
   showUserProfile = false;
+  storyPhotos: string[] = [];
+  
   private destroy$ = new Subject<void>();
   private currentPage = 1;
   private postsPerPage = 5;
   private isFetching = false;
   private hasMorePosts = true;
+  
+  private photoList: string[] = [
+    'p1.jpeg',
+    'p2.jpeg',
+    'p3.jpeg',
+    'p4.jpeg',
+    'p5.jpeg',
+    'p6.jpeg',
+    'p7.jpeg',
+    'p8.jpeg',
+    'p9.jpeg',
+    'p10.jpeg',
+    'p11.jpeg',
+    'p12.jpeg',
+    'p13.jpeg',
+    'p14.jpeg',
+    'p15.jpeg',
+  ];
 
   constructor(
     private postService: PostServiceService,
@@ -42,6 +62,16 @@ export class FeedComponent implements OnInit, OnDestroy {
     this.checkViewport();
     this.loadInitialData();
     this.setupScrollListener();
+    this.generateStoryPhotos();
+  }
+
+  private getRandomPhoto(): string {
+    const randomIndex = Math.floor(Math.random() * this.photoList.length);
+    return this.photoList[randomIndex];
+  }
+
+  private generateStoryPhotos(): void {
+    this.storyPhotos = Array(10).fill(null).map(() => this.getRandomPhoto());
   }
 
   @HostListener('window:resize', ['$event'])
@@ -98,7 +128,12 @@ export class FeedComponent implements OnInit, OnDestroy {
   loadUserPosts(userId: string): void {
     this.postService.getPostsByUserId(userId).pipe(takeUntil(this.destroy$)).subscribe({
       next: (posts) => {
-        this.posts = posts.map(post => ({ ...post, isLiked: false, isFavourited: false }));
+        this.posts = posts.map(post => ({ 
+          ...post, 
+          isLiked: false, 
+          isFavourited: false,
+          randomPhoto: this.getRandomPhoto()
+        }));
         this.isLoading = false;
       },
       error: (err) => {
@@ -118,7 +153,12 @@ export class FeedComponent implements OnInit, OnDestroy {
         if (posts.length === 0) {
           this.hasMorePosts = false;
         } else {
-          this.posts = [...this.posts, ...posts.map(post => ({ ...post, isLiked: false, isFavourited: false }))];
+          this.posts = [...this.posts, ...posts.map(post => ({ 
+            ...post, 
+            isLiked: false, 
+            isFavourited: false,
+            randomPhoto: this.getRandomPhoto()
+          }))];
           this.currentPage++;
         }
         this.isLoading = false;
@@ -159,24 +199,6 @@ export class FeedComponent implements OnInit, OnDestroy {
     (post as any).isLiked = !(post as any).isLiked;
     this.postService.editPost(post).subscribe();
   }
-
-  // toggleFavourite(post: Post): void {
-  //   if (!this.currentUser) return;
-
-  //   const isFavourited = (post as any).isFavourited;
-  //   if (isFavourited) {
-  //     this.favouriteService.deleteFavourite(post.id).pipe(takeUntil(this.destroy$)).subscribe({
-  //       next: () => (post as any).isFavourited = false,
-  //       error: (err) => console.error('Error removing favourite:', err)
-  //     });
-  //   } else {
-  //     const favouriteDto = { postId: post.id } as any;
-  //     this.favouriteService.addFavourite(favouriteDto).pipe(takeUntil(this.destroy$)).subscribe({
-  //       next: () => (post as any).isFavourited = true,
-  //       error: (err) => console.error('Error adding favourite:', err)
-  //     });
-  //   }
-  // }
 
   navigateToUserProfile(username: string): void {
     this.router.navigate(['/user', username]);

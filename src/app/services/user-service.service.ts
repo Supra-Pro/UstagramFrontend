@@ -41,6 +41,6 @@ export class UserServiceService {
   }
 
   searchUsers(term: string): Observable<User[]> {
-    return this.http.get<User[]>(`${this.apiUrl}SearchUsers?term=${term}`);
+    return this.http.get<User[]>(`${this.apiUrl}SearchUsers/search?term=${term}`);
   }
 }

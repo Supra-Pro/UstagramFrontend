@@ -424,3 +424,21 @@ $success: #4cc9f0;
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+.verified-badge {
+  color: #3897f0;
+  font-size: 1.2em;
+  margin-left: 5px;
+}
+
+.status-badge {
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-size: 0.8em;
+  margin-left: 10px;
+  
+  &.newcomer { background: #e0e0e0; }
+  &.expert { background: #4caf50; color: white; }
+  &.master { background: #2196f3; color: white; }
+  &.pro { background: #9c27b0; color: white; }
+}

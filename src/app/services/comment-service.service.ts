@@ -20,6 +20,14 @@ export class CommentServiceService {
     };
   }
 
+  // addComment(commentDto: CommentDTO): Observable<Comment> {
+  //   const userId = this.authService.getCurrentUserId();
+  //   return this.http.post<Comment>(`${this.apiUrl}CreateComment`, {
+  //     ...commentDto,
+  //     userId: userId
+  //   }, this.getHeaders());
+  // }
+
   addComment(comment: CommentDTO): Observable<string> {
     return this.http.post<string>(`${this.apiUrl}CreateComment`, comment, this.getHeaders());
   }
